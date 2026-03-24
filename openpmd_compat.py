@@ -52,16 +52,34 @@ def opmd_read_raw(file_handle, species, record_comp, extensions=None):
     it_key = it_keys[0]
     base_path = "/data/" + it_key + "/particles/" + species
 
-    parts = record_comp.split("/")
+    # Map common FBPIC/openPMD field names
+    comp_map = {
+        "w": "weighting",
+        "x": "position/x",
+        "y": "position/y",
+        "z": "position/z",
+        "ux": "momentum/x",
+        "uy": "momentum/y",
+        "uz": "momentum/z",
+    }
+    mapped = comp_map.get(record_comp, record_comp)
+
+    parts = mapped.split("/")
     if len(parts) == 2:
         record, comp = parts
         dset = file_handle[base_path + "/" + record + "/" + comp]
     else:
-        dset = file_handle[base_path + "/" + record_comp]
+        dset = file_handle[base_path + "/" + mapped]
 
     data = dset[:]
     if "unitSI" in dset.attrs:
         data = data * dset.attrs["unitSI"]
+
+    # For momentum, convert from SI (kg·m/s) to normalized units (γβ)
+    if mapped.startswith("momentum/"):
+        from scipy.constants import m_e, c
+        data = data / (m_e * c)
+
     return data
 
 
