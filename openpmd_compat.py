@@ -29,7 +29,20 @@ def opmd_read_params(filename):
         base = f["/data/" + it_key]
         time = float(base.attrs["time"])
         dt = float(base.attrs["dt"])
-        params = {"time": time, "dt": dt, "iteration": int(it_key)}
+        # Check for openPMD extensions (e.g., ED-PIC)
+        extensions = []
+        if "openPMDextension" in f.attrs:
+            ext_val = f.attrs["openPMDextension"]
+            if isinstance(ext_val, (int, np.integer)) and ext_val > 0:
+                extensions.append("ED-PIC")
+            elif isinstance(ext_val, str) and ext_val:
+                extensions.append(ext_val)
+        params = {
+            "time": time,
+            "dt": dt,
+            "iteration": int(it_key),
+            "extensions": extensions,
+        }
     return time, params
 
 
