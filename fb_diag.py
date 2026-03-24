@@ -4,7 +4,8 @@ More diagnostics for FBPIC
 from openpmd_viewer import OpenPMDTimeSeries
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.constants import c, pi, m_e, e
+from scipy.constants import c, m_e, e
+from math import pi
 from scipy.optimize import curve_fit
 
 sqrt_2pi=np.sqrt(2.*pi)

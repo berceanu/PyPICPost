@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import TwoDGaussianFit as tdgf
 import LorentzianFit as lfit
 from scipy import signal
-from scipy.constants import pi
+from math import pi
 from math import e as const_e
 from scipy.constants import e as e_charge
 from scipy.constants import c as c_speed
@@ -15,12 +15,7 @@ import os, warnings
 try: import parse
 except ImportError: warnings.warn('Cannot import lib \'parse\'. num_list cannot be activated.')
 import my_cmap
-try:
-    from openpmd_viewer.openpmd_timeseries.data_reader.field_reader import read_field_circ as opmd_read_field_circ
-    from openpmd_viewer.openpmd_timeseries.data_reader.particle_reader import read_species_data as opmd_read_raw
-    from openpmd_viewer.openpmd_timeseries.data_reader.params_reader import read_openPMD_params as opmd_read_params
-    from openpmd_viewer.openpmd_timeseries.utilities import combine_cylindrical_components as opmd_comb_cyl
-except ImportError: warnings.warn('Cannot import lib \'openpmd_viewer\'. Cannot read openPMD files.')
+from openpmd_compat import opmd_read_field_circ, opmd_read_raw, opmd_read_params, opmd_comb_cyl
 
 float_type=np.float64
 
